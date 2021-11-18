@@ -14,98 +14,47 @@ int val;
 
 %token  TOK_NUM TOK_CHAR
 
-%type <ival> op_expN TOK_NUM
+%type <ival> op_expN op_exp_func TOK_NUM
 %type <sval>  op_expC TOK_CHAR
 
-%start head
+%start input
 %%
 
+input:
+  %empty
+  | input head
+  ;
 
-head : op_exp2
+head : '\n'
+     | op_exp2 '\n'
+     | assign '\n'
      ;
 
 
-op_exp2 :
-    | op_expN {printf("num e num = %d\n",  $1); }
-    | op_expC {printf("num e num = %s\n",  $1); }
-    | op_expC '+' op_expN {printf("num e num = %s %d\n",  $1,$3); }
+op_exp2 :op_expN {printf("NUM = %d\n",  $1); }
+    | op_expC {printf("CHAR= %s\n",  $1); }
     ;
+
+op_exp_func: TOK_NUM {$$ = $1;}
+    | TOK_NUM '+' op_exp_func {$$ = $1 + $3;}
+    | TOK_NUM '-' op_exp_func {$$ = $1 - $3;}
+    | TOK_NUM '%' op_exp_func {$$ = $1 % $3;}
+    | TOK_NUM '/' op_exp_func {$$ = $1 / $3;}
+    | TOK_NUM '*' op_exp_func {$$ = $1 * $3;}
+
+
+assign:TOK_CHAR ':' '=' TOK_CHAR   {printf("(%s recebe %s) \n",  $1, $4 ); }
+     |TOK_CHAR ':' '=' op_exp_func     {printf("(%s recebe %d) \n",  $1, $4 ); }
+     ;
 
 op_expN: TOK_NUM {$$ = $1;}
     ;
 
 op_expC: TOK_CHAR {$$ = $1;}
     ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-assign:
-     |TOK_CHAR ':' '=' TOK_NUM    {printf("assingn %s a %d \n",  $1, $4 ); } 
-     |TOK_CHAR ':' '=' TOK_CHAR   {printf("assingn %s a %d \n",  $1, $4 ); }
-     |TOK_CHAR ':' '=' op_exp     {printf("assingn %s a %d \n",  $1, $4 ); }
-     ;
-
-op : '+'  {printf("PLUS"); }
-    |'-'
-    |'*'
-    |'%'
-    |'/'
-    ;
-
-op_exp: 
-    |TOK_NUM '+' TOK_NUM    {printf("num e num = %d\n",  $1 + $3 ); }
-    |TOK_CHAR op TOK_NUM
-    |TOK_NUM op TOK_CHAR
-    |TOK_NUM op op_exp
-    ; 
-
-
-
-top : TOK_NUM        { printf("TOK_NUM %d\n", $1); }
-    ;
-top : TOK_CHAR       { printf("TOK_CHAR %s\n", $1); }
-    ;
-
-*/
-
 %%
 
 void yyerror (char const *msg) {
   printf("parse error: %s\n", msg);
   exit(-1);
 }
-
