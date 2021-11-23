@@ -17,6 +17,8 @@ digit        [0-9]
 {digit}+                       { yylval.ival = atoi(yytext); return TOK_NUM; }
 ({alpha}+{digit}*)+            { yylval.sval = (char*)malloc(7919*sizeof(char)); strcpy(yylval.sval, yytext); return TOK_CHAR; }
 "-"                            { return '-';}
+">"                            { return '>';}
+"<"                            { return '<';}
 "%"                            { return '%';}
 "/"                            { return '/';}
 "+"                            { return '+'; }
