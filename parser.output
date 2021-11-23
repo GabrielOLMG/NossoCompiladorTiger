@@ -1,74 +1,1278 @@
+Terminals unused in grammar
+
+    PRINTI
+    SCANI
+
+
+State 8 conflicts: 3 shift/reduce
+State 12 conflicts: 1 shift/reduce
+State 13 conflicts: 1 shift/reduce
+State 14 conflicts: 1 shift/reduce
+State 20 conflicts: 3 shift/reduce, 8 reduce/reduce
+State 21 conflicts: 3 shift/reduce, 8 reduce/reduce
+State 73 conflicts: 1 shift/reduce
+
+
 Grammar
 
-    0 $accept: head $end
+    0 $accept: input $end
 
-    1 head: top
+    1 input: %empty
+    2      | input head
 
-    2 top: TOK_NUM
-    3    | TOK_CHAR
+    3 head: '\n'
+    4     | head2
+
+    5 head2: assign
+    6      | '\n' assign
+    7      | assign '\n'
+    8      | op_cond
+    9      | op_cond '\n'
+   10      | '\n' op_cond
+   11      | '\n' op_while
+   12      | op_while
+   13      | op_while '\n'
+   14      | types
+   15      | op_arith
+
+   16 op_arith: op_expN
+   17         | op_expC
+   18         | op_expN '+' op_arith
+   19         | op_expC '+' op_arith
+   20         | op_expN '-' op_arith
+   21         | op_expC '-' op_arith
+   22         | op_expN '%' op_arith
+   23         | op_expC '%' op_arith
+   24         | op_expN '/' op_arith
+   25         | op_expC '/' op_arith
+   26         | op_expN '*' op_arith
+   27         | op_expC '*' op_arith
+
+   28 op_logic: op_expN
+   29         | op_expC
+   30         | op_expN '<' op_arith
+   31         | op_expC '<' op_arith
+   32         | op_arith '<' op_arith
+   33         | op_expN '>' op_arith
+   34         | op_expC '>' op_arith
+   35         | op_arith '>' op_arith
+   36         | op_expN '=' op_arith
+   37         | op_expC '=' op_arith
+   38         | op_arith '=' op_arith
+   39         | op_expN '>' '=' op_arith
+   40         | op_expC '>' '=' op_arith
+   41         | op_arith '>' '=' op_arith
+   42         | op_expN '<' '=' op_arith
+   43         | op_expC '<' '=' op_arith
+   44         | op_arith '<' '=' op_arith
+   45         | op_expN '<' '>' op_arith
+   46         | op_expC '<' '>' op_arith
+   47         | op_arith '<' '>' op_arith
+
+   48 op_cond: IF op_logic THEN head2
+   49        | IF op_logic THEN head2 ELSE head2
+
+   50 op_while: WHILE op_logic DO head2
+
+   51 assign: op_expC ':' '=' op_arith
+   52       | op_expC ':' '=' op_logic
+
+   53 op_expN: TOK_NUM
+
+   54 op_expC: TOK_CHAR
+
+   55 types: INT op_expC
+   56      | INT assign
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
+    '\n' (10) 3 6 7 9 10 11 13
+    '%' (37) 22 23
+    '*' (42) 26 27
+    '+' (43) 18 19
+    '-' (45) 20 21
+    '/' (47) 24 25
+    ':' (58) 51 52
+    '<' (60) 30 31 32 42 43 44 45 46 47
+    '=' (61) 36 37 38 39 40 41 42 43 44 51 52
+    '>' (62) 33 34 35 39 40 41 45 46 47
     error (256)
-    TOK_NUM <ival> (258) 2
-    TOK_CHAR <sval> (259) 3
+    TOK_NUM <ival> (258) 53
+    TOK_CHAR <sval> (259) 54
+    IF (260) 48 49
+    ELSE (261) 49
+    THEN (262) 48 49
+    WHILE (263) 50
+    DO (264) 50
+    INT (265) 55 56
+    PRINTI (266)
+    SCANI (267)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (5)
+    $accept (23)
         on left: 0
-    head (6)
-        on left: 1
-        on right: 0
-    top (7)
-        on left: 2 3
-        on right: 1
+    input (24)
+        on left: 1 2
+        on right: 0 2
+    head (25)
+        on left: 3 4
+        on right: 2
+    head2 <sval> (26)
+        on left: 5 6 7 8 9 10 11 12 13 14 15
+        on right: 4 48 49 50
+    op_arith <sval> (27)
+        on left: 16 17 18 19 20 21 22 23 24 25 26 27
+        on right: 15 18 19 20 21 22 23 24 25 26 27 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 51
+    op_logic <sval> (28)
+        on left: 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+        on right: 48 49 50 52
+    op_cond <sval> (29)
+        on left: 48 49
+        on right: 8 9 10
+    op_while <sval> (30)
+        on left: 50
+        on right: 11 12 13
+    assign <sval> (31)
+        on left: 51 52
+        on right: 5 6 7 56
+    op_expN <sval> (32)
+        on left: 53
+        on right: 16 18 20 22 24 26 28 30 33 36 39 42 45
+    op_expC <sval> (33)
+        on left: 54
+        on right: 17 19 21 23 25 27 29 31 34 37 40 43 46 51 52 55
+    types <sval> (34)
+        on left: 55 56
+        on right: 14
 
 
 State 0
 
-    0 $accept: • head $end
+    0 $accept: . input $end
 
-    TOK_NUM   shift, and go to state 1
-    TOK_CHAR  shift, and go to state 2
+    $default  reduce using rule 1 (input)
 
-    head  go to state 3
-    top   go to state 4
+    input  go to state 1
 
 
 State 1
 
-    2 top: TOK_NUM •
+    0 $accept: input . $end
+    2 input: input . head
 
-    $default  reduce using rule 2 (top)
+    $end      shift, and go to state 2
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    IF        shift, and go to state 5
+    WHILE     shift, and go to state 6
+    INT       shift, and go to state 7
+    '\n'      shift, and go to state 8
+
+    head      go to state 9
+    head2     go to state 10
+    op_arith  go to state 11
+    op_cond   go to state 12
+    op_while  go to state 13
+    assign    go to state 14
+    op_expN   go to state 15
+    op_expC   go to state 16
+    types     go to state 17
 
 
 State 2
 
-    3 top: TOK_CHAR •
+    0 $accept: input $end .
 
-    $default  reduce using rule 3 (top)
+    $default  accept
 
 
 State 3
 
-    0 $accept: head • $end
+   53 op_expN: TOK_NUM .
 
-    $end  shift, and go to state 5
+    $default  reduce using rule 53 (op_expN)
 
 
 State 4
 
-    1 head: top •
+   54 op_expC: TOK_CHAR .
 
-    $default  reduce using rule 1 (head)
+    $default  reduce using rule 54 (op_expC)
 
 
 State 5
 
-    0 $accept: head $end •
+   48 op_cond: IF . op_logic THEN head2
+   49        | IF . op_logic THEN head2 ELSE head2
 
-    $default  accept
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 18
+    op_logic  go to state 19
+    op_expN   go to state 20
+    op_expC   go to state 21
+
+
+State 6
+
+   50 op_while: WHILE . op_logic DO head2
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 18
+    op_logic  go to state 22
+    op_expN   go to state 20
+    op_expC   go to state 21
+
+
+State 7
+
+   55 types: INT . op_expC
+   56      | INT . assign
+
+    TOK_CHAR  shift, and go to state 4
+
+    assign   go to state 23
+    op_expC  go to state 24
+
+
+State 8
+
+    3 head: '\n' .
+    6 head2: '\n' . assign
+   10      | '\n' . op_cond
+   11      | '\n' . op_while
+
+    TOK_CHAR  shift, and go to state 4
+    IF        shift, and go to state 5
+    WHILE     shift, and go to state 6
+
+    TOK_CHAR  [reduce using rule 3 (head)]
+    IF        [reduce using rule 3 (head)]
+    WHILE     [reduce using rule 3 (head)]
+    $default  reduce using rule 3 (head)
+
+    op_cond   go to state 25
+    op_while  go to state 26
+    assign    go to state 27
+    op_expC   go to state 28
+
+
+State 9
+
+    2 input: input head .
+
+    $default  reduce using rule 2 (input)
+
+
+State 10
+
+    4 head: head2 .
+
+    $default  reduce using rule 4 (head)
+
+
+State 11
+
+   15 head2: op_arith .
+
+    $default  reduce using rule 15 (head2)
+
+
+State 12
+
+    8 head2: op_cond .
+    9      | op_cond . '\n'
+
+    '\n'  shift, and go to state 29
+
+    '\n'      [reduce using rule 8 (head2)]
+    $default  reduce using rule 8 (head2)
+
+
+State 13
+
+   12 head2: op_while .
+   13      | op_while . '\n'
+
+    '\n'  shift, and go to state 30
+
+    '\n'      [reduce using rule 12 (head2)]
+    $default  reduce using rule 12 (head2)
+
+
+State 14
+
+    5 head2: assign .
+    7      | assign . '\n'
+
+    '\n'  shift, and go to state 31
+
+    '\n'      [reduce using rule 5 (head2)]
+    $default  reduce using rule 5 (head2)
+
+
+State 15
+
+   16 op_arith: op_expN .
+   18         | op_expN . '+' op_arith
+   20         | op_expN . '-' op_arith
+   22         | op_expN . '%' op_arith
+   24         | op_expN . '/' op_arith
+   26         | op_expN . '*' op_arith
+
+    '+'  shift, and go to state 32
+    '-'  shift, and go to state 33
+    '%'  shift, and go to state 34
+    '/'  shift, and go to state 35
+    '*'  shift, and go to state 36
+
+    $default  reduce using rule 16 (op_arith)
+
+
+State 16
+
+   17 op_arith: op_expC .
+   19         | op_expC . '+' op_arith
+   21         | op_expC . '-' op_arith
+   23         | op_expC . '%' op_arith
+   25         | op_expC . '/' op_arith
+   27         | op_expC . '*' op_arith
+   51 assign: op_expC . ':' '=' op_arith
+   52       | op_expC . ':' '=' op_logic
+
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '%'  shift, and go to state 39
+    '/'  shift, and go to state 40
+    '*'  shift, and go to state 41
+    ':'  shift, and go to state 42
+
+    $default  reduce using rule 17 (op_arith)
+
+
+State 17
+
+   14 head2: types .
+
+    $default  reduce using rule 14 (head2)
+
+
+State 18
+
+   32 op_logic: op_arith . '<' op_arith
+   35         | op_arith . '>' op_arith
+   38         | op_arith . '=' op_arith
+   41         | op_arith . '>' '=' op_arith
+   44         | op_arith . '<' '=' op_arith
+   47         | op_arith . '<' '>' op_arith
+
+    '<'  shift, and go to state 43
+    '>'  shift, and go to state 44
+    '='  shift, and go to state 45
+
+
+State 19
+
+   48 op_cond: IF op_logic . THEN head2
+   49        | IF op_logic . THEN head2 ELSE head2
+
+    THEN  shift, and go to state 46
+
+
+State 20
+
+   16 op_arith: op_expN .
+   18         | op_expN . '+' op_arith
+   20         | op_expN . '-' op_arith
+   22         | op_expN . '%' op_arith
+   24         | op_expN . '/' op_arith
+   26         | op_expN . '*' op_arith
+   28 op_logic: op_expN .
+   30         | op_expN . '<' op_arith
+   33         | op_expN . '>' op_arith
+   36         | op_expN . '=' op_arith
+   39         | op_expN . '>' '=' op_arith
+   42         | op_expN . '<' '=' op_arith
+   45         | op_expN . '<' '>' op_arith
+
+    '+'  shift, and go to state 32
+    '-'  shift, and go to state 33
+    '%'  shift, and go to state 34
+    '/'  shift, and go to state 35
+    '*'  shift, and go to state 36
+    '<'  shift, and go to state 47
+    '>'  shift, and go to state 48
+    '='  shift, and go to state 49
+
+    $end      reduce using rule 16 (op_arith)
+    $end      [reduce using rule 28 (op_logic)]
+    TOK_NUM   reduce using rule 16 (op_arith)
+    TOK_NUM   [reduce using rule 28 (op_logic)]
+    TOK_CHAR  reduce using rule 16 (op_arith)
+    TOK_CHAR  [reduce using rule 28 (op_logic)]
+    IF        reduce using rule 16 (op_arith)
+    IF        [reduce using rule 28 (op_logic)]
+    ELSE      reduce using rule 16 (op_arith)
+    ELSE      [reduce using rule 28 (op_logic)]
+    THEN      reduce using rule 28 (op_logic)
+    WHILE     reduce using rule 16 (op_arith)
+    WHILE     [reduce using rule 28 (op_logic)]
+    DO        reduce using rule 28 (op_logic)
+    INT       reduce using rule 16 (op_arith)
+    INT       [reduce using rule 28 (op_logic)]
+    '\n'      reduce using rule 16 (op_arith)
+    '\n'      [reduce using rule 28 (op_logic)]
+    '<'       [reduce using rule 16 (op_arith)]
+    '>'       [reduce using rule 16 (op_arith)]
+    '='       [reduce using rule 16 (op_arith)]
+    $default  reduce using rule 16 (op_arith)
+
+
+State 21
+
+   17 op_arith: op_expC .
+   19         | op_expC . '+' op_arith
+   21         | op_expC . '-' op_arith
+   23         | op_expC . '%' op_arith
+   25         | op_expC . '/' op_arith
+   27         | op_expC . '*' op_arith
+   29 op_logic: op_expC .
+   31         | op_expC . '<' op_arith
+   34         | op_expC . '>' op_arith
+   37         | op_expC . '=' op_arith
+   40         | op_expC . '>' '=' op_arith
+   43         | op_expC . '<' '=' op_arith
+   46         | op_expC . '<' '>' op_arith
+
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '%'  shift, and go to state 39
+    '/'  shift, and go to state 40
+    '*'  shift, and go to state 41
+    '<'  shift, and go to state 50
+    '>'  shift, and go to state 51
+    '='  shift, and go to state 52
+
+    $end      reduce using rule 17 (op_arith)
+    $end      [reduce using rule 29 (op_logic)]
+    TOK_NUM   reduce using rule 17 (op_arith)
+    TOK_NUM   [reduce using rule 29 (op_logic)]
+    TOK_CHAR  reduce using rule 17 (op_arith)
+    TOK_CHAR  [reduce using rule 29 (op_logic)]
+    IF        reduce using rule 17 (op_arith)
+    IF        [reduce using rule 29 (op_logic)]
+    ELSE      reduce using rule 17 (op_arith)
+    ELSE      [reduce using rule 29 (op_logic)]
+    THEN      reduce using rule 29 (op_logic)
+    WHILE     reduce using rule 17 (op_arith)
+    WHILE     [reduce using rule 29 (op_logic)]
+    DO        reduce using rule 29 (op_logic)
+    INT       reduce using rule 17 (op_arith)
+    INT       [reduce using rule 29 (op_logic)]
+    '\n'      reduce using rule 17 (op_arith)
+    '\n'      [reduce using rule 29 (op_logic)]
+    '<'       [reduce using rule 17 (op_arith)]
+    '>'       [reduce using rule 17 (op_arith)]
+    '='       [reduce using rule 17 (op_arith)]
+    $default  reduce using rule 17 (op_arith)
+
+
+State 22
+
+   50 op_while: WHILE op_logic . DO head2
+
+    DO  shift, and go to state 53
+
+
+State 23
+
+   56 types: INT assign .
+
+    $default  reduce using rule 56 (types)
+
+
+State 24
+
+   51 assign: op_expC . ':' '=' op_arith
+   52       | op_expC . ':' '=' op_logic
+   55 types: INT op_expC .
+
+    ':'  shift, and go to state 42
+
+    $default  reduce using rule 55 (types)
+
+
+State 25
+
+   10 head2: '\n' op_cond .
+
+    $default  reduce using rule 10 (head2)
+
+
+State 26
+
+   11 head2: '\n' op_while .
+
+    $default  reduce using rule 11 (head2)
+
+
+State 27
+
+    6 head2: '\n' assign .
+
+    $default  reduce using rule 6 (head2)
+
+
+State 28
+
+   51 assign: op_expC . ':' '=' op_arith
+   52       | op_expC . ':' '=' op_logic
+
+    ':'  shift, and go to state 42
+
+
+State 29
+
+    9 head2: op_cond '\n' .
+
+    $default  reduce using rule 9 (head2)
+
+
+State 30
+
+   13 head2: op_while '\n' .
+
+    $default  reduce using rule 13 (head2)
+
+
+State 31
+
+    7 head2: assign '\n' .
+
+    $default  reduce using rule 7 (head2)
+
+
+State 32
+
+   18 op_arith: op_expN '+' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 54
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 33
+
+   20 op_arith: op_expN '-' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 56
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 34
+
+   22 op_arith: op_expN '%' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 57
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 35
+
+   24 op_arith: op_expN '/' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 58
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 36
+
+   26 op_arith: op_expN '*' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 59
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 37
+
+   19 op_arith: op_expC '+' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 60
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 38
+
+   21 op_arith: op_expC '-' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 61
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 39
+
+   23 op_arith: op_expC '%' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 62
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 40
+
+   25 op_arith: op_expC '/' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 63
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 41
+
+   27 op_arith: op_expC '*' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 64
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 42
+
+   51 assign: op_expC ':' . '=' op_arith
+   52       | op_expC ':' . '=' op_logic
+
+    '='  shift, and go to state 65
+
+
+State 43
+
+   32 op_logic: op_arith '<' . op_arith
+   44         | op_arith '<' . '=' op_arith
+   47         | op_arith '<' . '>' op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    '>'       shift, and go to state 66
+    '='       shift, and go to state 67
+
+    op_arith  go to state 68
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 44
+
+   35 op_logic: op_arith '>' . op_arith
+   41         | op_arith '>' . '=' op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    '='       shift, and go to state 69
+
+    op_arith  go to state 70
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 45
+
+   38 op_logic: op_arith '=' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 71
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 46
+
+   48 op_cond: IF op_logic THEN . head2
+   49        | IF op_logic THEN . head2 ELSE head2
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    IF        shift, and go to state 5
+    WHILE     shift, and go to state 6
+    INT       shift, and go to state 7
+    '\n'      shift, and go to state 72
+
+    head2     go to state 73
+    op_arith  go to state 11
+    op_cond   go to state 12
+    op_while  go to state 13
+    assign    go to state 14
+    op_expN   go to state 15
+    op_expC   go to state 16
+    types     go to state 17
+
+
+State 47
+
+   30 op_logic: op_expN '<' . op_arith
+   42         | op_expN '<' . '=' op_arith
+   45         | op_expN '<' . '>' op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    '>'       shift, and go to state 74
+    '='       shift, and go to state 75
+
+    op_arith  go to state 76
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 48
+
+   33 op_logic: op_expN '>' . op_arith
+   39         | op_expN '>' . '=' op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    '='       shift, and go to state 77
+
+    op_arith  go to state 78
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 49
+
+   36 op_logic: op_expN '=' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 79
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 50
+
+   31 op_logic: op_expC '<' . op_arith
+   43         | op_expC '<' . '=' op_arith
+   46         | op_expC '<' . '>' op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    '>'       shift, and go to state 80
+    '='       shift, and go to state 81
+
+    op_arith  go to state 82
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 51
+
+   34 op_logic: op_expC '>' . op_arith
+   40         | op_expC '>' . '=' op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    '='       shift, and go to state 83
+
+    op_arith  go to state 84
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 52
+
+   37 op_logic: op_expC '=' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 85
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 53
+
+   50 op_while: WHILE op_logic DO . head2
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    IF        shift, and go to state 5
+    WHILE     shift, and go to state 6
+    INT       shift, and go to state 7
+    '\n'      shift, and go to state 72
+
+    head2     go to state 86
+    op_arith  go to state 11
+    op_cond   go to state 12
+    op_while  go to state 13
+    assign    go to state 14
+    op_expN   go to state 15
+    op_expC   go to state 16
+    types     go to state 17
+
+
+State 54
+
+   18 op_arith: op_expN '+' op_arith .
+
+    $default  reduce using rule 18 (op_arith)
+
+
+State 55
+
+   17 op_arith: op_expC .
+   19         | op_expC . '+' op_arith
+   21         | op_expC . '-' op_arith
+   23         | op_expC . '%' op_arith
+   25         | op_expC . '/' op_arith
+   27         | op_expC . '*' op_arith
+
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '%'  shift, and go to state 39
+    '/'  shift, and go to state 40
+    '*'  shift, and go to state 41
+
+    $default  reduce using rule 17 (op_arith)
+
+
+State 56
+
+   20 op_arith: op_expN '-' op_arith .
+
+    $default  reduce using rule 20 (op_arith)
+
+
+State 57
+
+   22 op_arith: op_expN '%' op_arith .
+
+    $default  reduce using rule 22 (op_arith)
+
+
+State 58
+
+   24 op_arith: op_expN '/' op_arith .
+
+    $default  reduce using rule 24 (op_arith)
+
+
+State 59
+
+   26 op_arith: op_expN '*' op_arith .
+
+    $default  reduce using rule 26 (op_arith)
+
+
+State 60
+
+   19 op_arith: op_expC '+' op_arith .
+
+    $default  reduce using rule 19 (op_arith)
+
+
+State 61
+
+   21 op_arith: op_expC '-' op_arith .
+
+    $default  reduce using rule 21 (op_arith)
+
+
+State 62
+
+   23 op_arith: op_expC '%' op_arith .
+
+    $default  reduce using rule 23 (op_arith)
+
+
+State 63
+
+   25 op_arith: op_expC '/' op_arith .
+
+    $default  reduce using rule 25 (op_arith)
+
+
+State 64
+
+   27 op_arith: op_expC '*' op_arith .
+
+    $default  reduce using rule 27 (op_arith)
+
+
+State 65
+
+   51 assign: op_expC ':' '=' . op_arith
+   52       | op_expC ':' '=' . op_logic
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 87
+    op_logic  go to state 88
+    op_expN   go to state 20
+    op_expC   go to state 21
+
+
+State 66
+
+   47 op_logic: op_arith '<' '>' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 89
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 67
+
+   44 op_logic: op_arith '<' '=' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 90
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 68
+
+   32 op_logic: op_arith '<' op_arith .
+
+    $default  reduce using rule 32 (op_logic)
+
+
+State 69
+
+   41 op_logic: op_arith '>' '=' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 91
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 70
+
+   35 op_logic: op_arith '>' op_arith .
+
+    $default  reduce using rule 35 (op_logic)
+
+
+State 71
+
+   38 op_logic: op_arith '=' op_arith .
+
+    $default  reduce using rule 38 (op_logic)
+
+
+State 72
+
+    6 head2: '\n' . assign
+   10      | '\n' . op_cond
+   11      | '\n' . op_while
+
+    TOK_CHAR  shift, and go to state 4
+    IF        shift, and go to state 5
+    WHILE     shift, and go to state 6
+
+    op_cond   go to state 25
+    op_while  go to state 26
+    assign    go to state 27
+    op_expC   go to state 28
+
+
+State 73
+
+   48 op_cond: IF op_logic THEN head2 .
+   49        | IF op_logic THEN head2 . ELSE head2
+
+    ELSE  shift, and go to state 92
+
+    ELSE      [reduce using rule 48 (op_cond)]
+    $default  reduce using rule 48 (op_cond)
+
+
+State 74
+
+   45 op_logic: op_expN '<' '>' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 93
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 75
+
+   42 op_logic: op_expN '<' '=' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 94
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 76
+
+   30 op_logic: op_expN '<' op_arith .
+
+    $default  reduce using rule 30 (op_logic)
+
+
+State 77
+
+   39 op_logic: op_expN '>' '=' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 95
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 78
+
+   33 op_logic: op_expN '>' op_arith .
+
+    $default  reduce using rule 33 (op_logic)
+
+
+State 79
+
+   36 op_logic: op_expN '=' op_arith .
+
+    $default  reduce using rule 36 (op_logic)
+
+
+State 80
+
+   46 op_logic: op_expC '<' '>' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 96
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 81
+
+   43 op_logic: op_expC '<' '=' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 97
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 82
+
+   31 op_logic: op_expC '<' op_arith .
+
+    $default  reduce using rule 31 (op_logic)
+
+
+State 83
+
+   40 op_logic: op_expC '>' '=' . op_arith
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+
+    op_arith  go to state 98
+    op_expN   go to state 15
+    op_expC   go to state 55
+
+
+State 84
+
+   34 op_logic: op_expC '>' op_arith .
+
+    $default  reduce using rule 34 (op_logic)
+
+
+State 85
+
+   37 op_logic: op_expC '=' op_arith .
+
+    $default  reduce using rule 37 (op_logic)
+
+
+State 86
+
+   50 op_while: WHILE op_logic DO head2 .
+
+    $default  reduce using rule 50 (op_while)
+
+
+State 87
+
+   32 op_logic: op_arith . '<' op_arith
+   35         | op_arith . '>' op_arith
+   38         | op_arith . '=' op_arith
+   41         | op_arith . '>' '=' op_arith
+   44         | op_arith . '<' '=' op_arith
+   47         | op_arith . '<' '>' op_arith
+   51 assign: op_expC ':' '=' op_arith .
+
+    '<'  shift, and go to state 43
+    '>'  shift, and go to state 44
+    '='  shift, and go to state 45
+
+    $default  reduce using rule 51 (assign)
+
+
+State 88
+
+   52 assign: op_expC ':' '=' op_logic .
+
+    $default  reduce using rule 52 (assign)
+
+
+State 89
+
+   47 op_logic: op_arith '<' '>' op_arith .
+
+    $default  reduce using rule 47 (op_logic)
+
+
+State 90
+
+   44 op_logic: op_arith '<' '=' op_arith .
+
+    $default  reduce using rule 44 (op_logic)
+
+
+State 91
+
+   41 op_logic: op_arith '>' '=' op_arith .
+
+    $default  reduce using rule 41 (op_logic)
+
+
+State 92
+
+   49 op_cond: IF op_logic THEN head2 ELSE . head2
+
+    TOK_NUM   shift, and go to state 3
+    TOK_CHAR  shift, and go to state 4
+    IF        shift, and go to state 5
+    WHILE     shift, and go to state 6
+    INT       shift, and go to state 7
+    '\n'      shift, and go to state 72
+
+    head2     go to state 99
+    op_arith  go to state 11
+    op_cond   go to state 12
+    op_while  go to state 13
+    assign    go to state 14
+    op_expN   go to state 15
+    op_expC   go to state 16
+    types     go to state 17
+
+
+State 93
+
+   45 op_logic: op_expN '<' '>' op_arith .
+
+    $default  reduce using rule 45 (op_logic)
+
+
+State 94
+
+   42 op_logic: op_expN '<' '=' op_arith .
+
+    $default  reduce using rule 42 (op_logic)
+
+
+State 95
+
+   39 op_logic: op_expN '>' '=' op_arith .
+
+    $default  reduce using rule 39 (op_logic)
+
+
+State 96
+
+   46 op_logic: op_expC '<' '>' op_arith .
+
+    $default  reduce using rule 46 (op_logic)
+
+
+State 97
+
+   43 op_logic: op_expC '<' '=' op_arith .
+
+    $default  reduce using rule 43 (op_logic)
+
+
+State 98
+
+   40 op_logic: op_expC '>' '=' op_arith .
+
+    $default  reduce using rule 40 (op_logic)
+
+
+State 99
+
+   49 op_cond: IF op_logic THEN head2 ELSE head2 .
+
+    $default  reduce using rule 49 (op_cond)
