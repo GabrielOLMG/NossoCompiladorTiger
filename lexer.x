@@ -14,6 +14,9 @@ digit        [0-9]
 %%
 
 [ \t\r]+                     /* skip whitespace */
+"if"                           { return IF;}
+"then"                         { return THEN;}
+"else"                         { return ELSE;}
 {digit}+                       { yylval.ival = atoi(yytext); return TOK_NUM; }
 ({alpha}+{digit}*)+            { yylval.sval = (char*)malloc(7919*sizeof(char)); strcpy(yylval.sval, yytext); return TOK_CHAR; }
 "-"                            { return '-';}
