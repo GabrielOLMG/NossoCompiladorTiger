@@ -15,8 +15,13 @@ digit        [0-9]
 
 [ \t\r]+                     /* skip whitespace */
 "if"                            { return IF;}
+"let"                            { return LET;}
+"end"                            { return END;}
 "then"                          { return THEN;}
 "else"                            { return ELSE;}
+"var"                            { return VAR;}
+";"                            { return ';';}
+
 "while"                            { return WHILE;}
 "do"                            { return DO;}
 "int"                            { return INT;}
@@ -32,6 +37,11 @@ digit        [0-9]
 "+"                            { return '+'; }
 "("                            { return '('; }
 ")"                            { return ')'; }
+"{"                            { return '{'; }
+"}"                            { return '}'; }
+"["                            { return '['; }
+"]"                            { return ']'; }
+
 ":"                            { return ':';}
 "="                            { return '=';}
 "*"                            { return '*'; }

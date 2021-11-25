@@ -28,7 +28,8 @@ a:=4
 
 c:= c + 1
 
-while  b<>3 do int a a:=2
-int f:=2
+while  b<>3 do (A:=2;B:=3;if b<3 then a:=3)
 
-"hjg"
+a:= scani()
+
+[A:=2;B:=4]
