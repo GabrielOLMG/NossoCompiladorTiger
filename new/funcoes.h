@@ -23,6 +23,17 @@ Exp mk_op(operacoes op, Exp e1, Exp e2){
   return e;
 }
 
+
+
+Assert mk_assert(Exp direita, Exp esquerda){
+  Assert a = (Assert)malloc(sizeof(struct _assert));
+  a->esquerda = esquerda;
+  a->direita = direita;
+  return a;
+}
+
+
+
 void printaEnumOp(operacoes op){
   switch(op){
     case PLUS:
@@ -40,8 +51,23 @@ void printaEnumOp(operacoes op){
     case MOD:
       printf("MOD ");
       break;
+    case GT:
+      printf("GT ");
+      break;
+    case LT:
+      printf("LT ");
+      break;
+    case GE:
+      printf("GE ");
+      break;
+    case LE:
+      printf("LE ");
+      break;
+    case EQ:
+      printf("EQ ");
+      break;
     default:
-      printf("ainda n implementado");
+      printf("<ainda n implementado>");
       break;
   }
 }
@@ -49,12 +75,16 @@ void printaEnumOp(operacoes op){
 void printaExp(Exp e){
   switch(e->tag){
     case NUM:
-      printf("NUM %d ", e->val);
+      printf("[NUM %d]", e->val);
+      break;
+    case ID:
+      printf("[ID %s]", e->id);
       break;
     case OP:
       printf("(");
       printaEnumOp(e->operacoes.op);
       printaExp(e->operacoes.left);
+      printf(" ");
       printaExp(e->operacoes.right);
       printf(")");
       break;
@@ -63,4 +93,19 @@ void printaExp(Exp e){
       break;
   }
 }
+
+void printaAssert(Assert a){
+  printf("(ASSERT ");
+  printaExp(a->direita);
+  printf(" ");
+  printaExp(a->esquerda);
+  printf(")");
+}
+
+
+
+
+
+
+
 

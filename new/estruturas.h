@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum {PLUS,MINUS,TIME,DIV,MOD} operacoes;
-
+enum op{PLUS,MINUS,TIME,DIV,MOD,GT,LT,GE,LE,EQ} ;
+typedef enum op operacoes;
 struct _exp{
   enum {ID,NUM,OP} tag;
   union{
@@ -17,3 +17,7 @@ struct _exp{
 };typedef struct _exp *Exp;
 
 
+struct _assert{
+  Exp esquerda;
+  Exp direita;
+};typedef struct _assert *Assert;
