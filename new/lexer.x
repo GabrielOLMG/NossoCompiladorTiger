@@ -20,7 +20,9 @@ digit        [0-9]
 
 "if"                           { return IF; }
 "else"                         { return ELSE; }
-"then"                         { return THEN; }                   
+"then"                         { return THEN; }  
+"while"                        { return WHILE; }
+"do"                           { return DO; }
 
 
 {digit}+                       { yylval.ival = atoi(yytext); return TOK_NUM; }

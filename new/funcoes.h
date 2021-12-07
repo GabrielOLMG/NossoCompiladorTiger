@@ -23,6 +23,17 @@ Exp mk_op(operacoes op, Exp e1, Exp e2){
   return e;
 }
 
+Exp mk_tc(ties_cond tc, Exp left, Exp middle, Exp right){
+  Exp e = (Exp)malloc(sizeof(struct _exp));
+  e->tag = TC;
+  e->ties_cond.tc = tc;
+  e->ties_cond.left = left;
+  e->ties_cond.middle = middle;
+  e->ties_cond.right = right;
+  return e;
+}
+
+
 
 
 /*Assert mk_assert(Exp direita, Exp esquerda){
@@ -63,6 +74,9 @@ void printaEnumOp(operacoes op){
     case LE:
       printf("LE ");
       break;
+    case NE:
+      printf("NE ");
+      break;
     case EQ:
       printf("EQ ");
       break;
@@ -75,6 +89,22 @@ void printaEnumOp(operacoes op){
     default:
       printf("<ainda n implementado>");
       break;
+  }
+}
+void printaEnumTc(ties_cond tc){
+  switch (tc){
+  case IF_:
+    printf("IF ");    
+    break; 
+  case IF_ELSE:
+    printf("IF ELSE ");
+    break;
+  case WHILE_DO:
+    printf("WHILE DO ");
+    break;
+  default:
+    printf("NAO IMPLEMENTADO ");
+    break;
   }
 }
 
@@ -92,6 +122,18 @@ void printaExp(Exp e){
       printaExp(e->operacoes.left);
       printf(" ");
       printaExp(e->operacoes.right);
+      printf(")");
+      break;
+    case TC:
+      printf("(");
+      printaEnumTc(e->ties_cond.tc);
+      printaExp(e->ties_cond.left);
+      printf(" ");
+      printaExp(e->ties_cond.middle);
+      if (e->ties_cond.right != NULL){
+        printf(" ");
+        printaExp(e->ties_cond.right);
+      }
       printf(")");
       break;
     default:

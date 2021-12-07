@@ -2,9 +2,9 @@
 (done) • Expressões aritméticas: +, -, *, /, %
 (done) • Declarações de variáveis e atribuições simples: var := expr
 (done) • Operadores de comparação: =, <>, <, <=, >, >=
-• Execução condicional: if-then e if-then-else
+(done meio meh) • Execução condicional: if-then e if-then-else
 (done) • Sequências de expressões: ( expr; expr; . . . expr }
-• Ciclos while
+(done meio meh) • Ciclos while
 • Definição de funções com argumentos e retorno de valores
 • Funções para entrada e saída de inteiros: scani(), printi()
 (done) • Comentarios
