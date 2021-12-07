@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum op{PLUS,MINUS,TIME,DIV,MOD,GT,LT,GE,LE,EQ,NE,ASSERT,EXP_SEQ} ;
+enum op{PLUS,MINUS,TIME,DIV,MOD,GT,LT,GE,LE,EQ,NE,ASSERT,EXP_SEQ,VAR_,FUNCTION_} ;
 enum ties_cond{IF_,IF_ELSE,WHILE_DO};
 enum io{PRINTI_,SCANI_};
 
@@ -10,7 +10,7 @@ typedef enum io io_;
 typedef enum op operacoes;
 typedef enum ties_cond ties_cond;
 struct _exp{
-  enum {ID,NUM,OP,TC,IO} tag;
+  enum {ID,NUM,OP,TC,IO,DECL} tag;
   union{
     int val;
     char*id;

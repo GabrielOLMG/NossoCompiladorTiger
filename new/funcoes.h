@@ -41,6 +41,15 @@ Exp mk_io(io_ io, Exp value){
   return e;
 }
 
+Exp mk_decl(operacoes op, Exp e1, Exp e2){
+  Exp e = (Exp)malloc(sizeof(struct _exp));
+  e->tag = DECL;
+  e->operacoes.op = op;
+  e->operacoes.left = e1;
+  e->operacoes.right = e2;
+  return e;
+}
+
 
 
 
@@ -87,6 +96,9 @@ void printaEnumOp(operacoes op){
       break;
     case EQ:
       printf("EQ ");
+      break;
+    case VAR_:
+      printf("VAR ");
       break;
     case ASSERT:
       printf("ASSERT ");
@@ -168,11 +180,22 @@ void printaExp(Exp e){
       }
       printf(")");
       break;
+    case DECL:
+      printf("(");
+      printaEnumOp(e->operacoes.op);
+      printaExp(e->operacoes.left);
+      if(e->operacoes.right != NULL){
+        printf(" ");
+        printaExp(e->operacoes.right);
+        }
+      printf(")");
+      break;
     default:
       printf("erro \n");
       break;
   }
 }
+
 
 /*void printaAssert(Assert a){
   printf("(ASSERT ");

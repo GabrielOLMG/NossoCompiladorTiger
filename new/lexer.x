@@ -18,6 +18,11 @@ digit        [0-9]
 
 [ \t\r]+                       /* skip whitespace */
 
+"let"                          { return LET; }
+"in"                             { return IN; }
+"var"                          { return VAR; }
+
+
 "if"                           { return IF; }
 [\n]*"else"[\n]*               { return ELSE; }
 [\n]*"then"[\n]*               { return THEN; }  
@@ -51,7 +56,7 @@ digit        [0-9]
 "\n"                           { return T_NEWLINE; }
 <<EOF>>                        { return EOF; }
 
-[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]    { printf("COMENTARIO AQUI\n");}
+[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]    { printf("--------------------------------------------------------\n");}
 .                              { printf("Mystery character %s\n", yytext); }
 
 
