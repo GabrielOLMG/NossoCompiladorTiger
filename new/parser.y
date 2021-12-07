@@ -34,7 +34,7 @@ new_line : exp    { printaExp($1); printf("\n");}
     | T_NEWLINE
     ;
 
-exp : term                         { $$ = $1; }
+exp :term                          { $$ = $1; }
     | '(' exp_seq ')'              { $$ = $2; }
     | TOK_CHAR ':' '=' exp         { $$ = mk_op(ASSERT,mk_id($1),$4);}
     | exp '+' exp                  { $$ = mk_op(PLUS,$1, $3); }
@@ -48,9 +48,9 @@ exp : term                         { $$ = $1; }
     | exp '>' '=' exp              { $$ = mk_op(GE,$1, $4); }
     | exp '<' '=' exp              { $$ = mk_op(LE,$1, $4); }
     | exp '<' '>' exp              { $$ = mk_op(NE,$1, $4); }
-    | IF exp THEN exp              { $$ = mk_tc(IF_,$2, $4,NULL); }
     | IF exp THEN exp ELSE exp     { $$ = mk_tc(IF_ELSE,$2, $4,$6); }
-    | WHILE exp DO exp              { $$ = mk_tc(WHILE_DO,$2, $4,NULL); }
+    | IF exp THEN exp              { $$ = mk_tc(IF_,$2, $4,NULL); }
+    | WHILE exp DO exp             { $$ = mk_tc(WHILE_DO,$2, $4,NULL); }
     ;
 
 exp_seq : exp           { $$ = $1; }

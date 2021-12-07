@@ -15,20 +15,31 @@ teste3:=9=9
 teste4:=a
 
 teste5:= (2+2)+2
-@
-
-/*a la
-aka+ açaí jeriopjeqr0=jergju237234589343489=-=---=-?
-/**/
 
 teste6:= a=(b=c)
-/*teste62:= a=b=c*/
+/*ISSO PRECISA DAR ERRO teste62:= a=b=c*/
 (a+b)
 (s+d;e+r;teu+bife;a:=5)
 
+/**/
 if (2+1) then (3+1)
-
-
 if (2<3) then a:=4 else (a<>4)
-
 while True do a:=a+1
+
+
+/*ESTA [OPHA] TEM QUE FUNFAR */
+if a:=3 then
+a<>3
+else
+a:=4
+
+if a<3
+then a:=3
+
+while a<3
+do a:=a+3
+
+/* 
+
+(2:=3;
+3=5)*/

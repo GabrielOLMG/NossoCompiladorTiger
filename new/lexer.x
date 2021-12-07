@@ -19,10 +19,10 @@ digit        [0-9]
 [ \t\r]+                       /* skip whitespace */
 
 "if"                           { return IF; }
-"else"                         { return ELSE; }
-"then"                         { return THEN; }  
+[\n]*"else"[\n]*               { return ELSE; }
+[\n]*"then"[\n]*               { return THEN; }  
 "while"                        { return WHILE; }
-"do"                           { return DO; }
+[\n]*"do"[\n]*                      { return DO; }
 
 
 {digit}+                       { yylval.ival = atoi(yytext); return TOK_NUM; }
@@ -50,7 +50,7 @@ digit        [0-9]
 "\n"                           { return T_NEWLINE; }
 <<EOF>>                        { return EOF; }
 
-[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]    { printf("do do noth\n");}
+[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]    { printf("COMENTARIO AQUI\n");}
 .                              { printf("Mystery character %s\n", yytext); }
 
 
