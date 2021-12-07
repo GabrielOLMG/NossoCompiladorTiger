@@ -7,7 +7,7 @@ int yylex (void);
 void yyerror (char const *);
 %}
 
-%token TOK_NUM TOK_CHAR T_NEWLINE
+%token TOK_NUM TOK_CHAR T_NEWLINE IF THEN ELSE
 
 %union {
     int ival;
@@ -19,7 +19,7 @@ void yyerror (char const *);
 
 %type <sval> TOK_CHAR
 %type <ival> TOK_NUM
-%type <exp_> term exp
+%type <exp_> term exp exp2
 %type <assert_> assert
 
 %start programa
@@ -34,24 +34,27 @@ new_line : assert    { printaAssert($1); printf("\n");}
     | T_NEWLINE
     ;
 
-exp : term              { $$ = $1; }
-    | '(' exp ')'       { $$ = $2; }
-    | exp '+' term      { $$ = mk_op(PLUS,$1, $3); }
-    | exp '-' term      { $$ = mk_op(MINUS,$1, $3); }
-    | exp '/' term      { $$ = mk_op(DIV,$1, $3); }
-    | exp '%' term      { $$ = mk_op(MOD,$1, $3); }
-    | exp '*' term      { $$ = mk_op(TIME,$1, $3); }
-    | exp '>' term      { $$ = mk_op(GT,$1, $3); }
-    | exp '<' term      { $$ = mk_op(LT,$1, $3); }
-    | exp '=' term      { $$ = mk_op(EQ,$1, $3); }
-    | exp '>' '=' term  { $$ = mk_op(GE,$1, $4); }
-    | exp '<' '=' term  { $$ = mk_op(LE,$1, $4); }
+exp : exp2
+    | exp2 '+' exp2      { $$ = mk_op(PLUS,$1, $3); }
+    | exp2 '-' exp2      { $$ = mk_op(MINUS,$1, $3); }
+    | exp2 '/' exp2      { $$ = mk_op(DIV,$1, $3); }
+    | exp2 '%' exp2      { $$ = mk_op(MOD,$1, $3); }
+    | exp2 '*' exp2      { $$ = mk_op(TIME,$1, $3); }
+    | exp2 '>' exp2      { $$ = mk_op(GT,$1, $3); }
+    | exp2 '<' exp2      { $$ = mk_op(LT,$1, $3); }
+    | exp2 '=' exp2      { $$ = mk_op(EQ,$1, $3); }
+    | exp2 '>' '=' exp2  { $$ = mk_op(GE,$1, $4); }
+    | exp2 '<' '=' exp2  { $$ = mk_op(LE,$1, $4); }
     ;
 
+exp2 : term              { $$ = $1; }
+    | '(' exp ')'        { $$ = $2; }
+    ;
 
 assert : TOK_CHAR ':' '=' exp {$$ = mk_assert(mk_id($1),$4);}
     ;
 
+//seq : assert ';' assert;
 
 term : TOK_NUM      {$$ = mk_num($1);}
     | TOK_CHAR      {$$ = mk_id($1);}

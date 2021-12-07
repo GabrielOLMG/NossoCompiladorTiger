@@ -21,3 +21,8 @@ struct _assert{
   Exp esquerda;
   Exp direita;
 };typedef struct _assert *Assert;
+
+struct _seq{
+  Exp esquerda;
+  Exp direita;
+};typedef struct _seq *Seq;

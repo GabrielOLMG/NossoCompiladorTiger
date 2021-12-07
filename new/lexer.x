@@ -18,8 +18,14 @@ digit        [0-9]
 
 [ \t\r]+                       /* skip whitespace */
 
+"if"                           { return IF; }
+"else"                         { return ELSE; }
+"then"                         { return THEN; }                   
+
+
 {digit}+                       { yylval.ival = atoi(yytext); return TOK_NUM; }
 ({alpha}+{digit}*)+            { yylval.sval = (char*)malloc(100*sizeof(char)); strcpy(yylval.sval, yytext); return TOK_CHAR; }
+
 
 "+"                            { return '+'; }
 "*"                            { return '*'; }
@@ -41,7 +47,7 @@ digit        [0-9]
 "\n"                           { return T_NEWLINE; }
 <<EOF>>                        { return EOF; }
 
-
+[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]    { printf("do do noth\n");}
 .                              { printf("Mystery character %s\n", yytext); }
 
 

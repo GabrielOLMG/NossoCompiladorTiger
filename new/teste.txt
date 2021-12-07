@@ -14,5 +14,13 @@ teste3:=9=9
 
 teste4:=a
 
+teste5:= (2+2)+2
+@
 
+/*a la
+aka+ açaí jeriopjeqr0=jergju237234589343489=-=---=-?
+/**/
 
+teste6:= a=(b=c)
+/*teste62:= a=b=c*/
+/*a+b*/
