@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum op{PLUS,MINUS,TIME,DIV,MOD,GT,LT,GE,LE,EQ} ;
+enum op{PLUS,MINUS,TIME,DIV,MOD,GT,LT,GE,LE,EQ,ASSERT,EXP_SEQ} ;
 typedef enum op operacoes;
 struct _exp{
   enum {ID,NUM,OP} tag;
@@ -17,12 +17,12 @@ struct _exp{
 };typedef struct _exp *Exp;
 
 
-struct _assert{
+/*struct _assert{
   Exp esquerda;
   Exp direita;
-};typedef struct _assert *Assert;
+};typedef struct _assert *Assert;*/
 
-struct _seq{
+/*struct _seq{
   Exp esquerda;
   Exp direita;
-};typedef struct _seq *Seq;
+};typedef struct _seq *Seq; */

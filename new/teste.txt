@@ -23,4 +23,5 @@ aka+ açaí jeriopjeqr0=jergju237234589343489=-=---=-?
 
 teste6:= a=(b=c)
 /*teste62:= a=b=c*/
-/*a+b*/
+(a+b)
+(s+d;e+r;teu+bife;a:=5;)

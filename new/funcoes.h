@@ -25,12 +25,12 @@ Exp mk_op(operacoes op, Exp e1, Exp e2){
 
 
 
-Assert mk_assert(Exp direita, Exp esquerda){
+/*Assert mk_assert(Exp direita, Exp esquerda){
   Assert a = (Assert)malloc(sizeof(struct _assert));
   a->esquerda = esquerda;
   a->direita = direita;
   return a;
-}
+}*/
 
 
 
@@ -66,6 +66,12 @@ void printaEnumOp(operacoes op){
     case EQ:
       printf("EQ ");
       break;
+    case ASSERT:
+      printf("ASSERT ");
+      break;
+    case EXP_SEQ:
+      printf("EXP_SEQ ");
+      break;
     default:
       printf("<ainda n implementado>");
       break;
@@ -94,13 +100,13 @@ void printaExp(Exp e){
   }
 }
 
-void printaAssert(Assert a){
+/*void printaAssert(Assert a){
   printf("(ASSERT ");
   printaExp(a->direita);
   printf(" ");
   printaExp(a->esquerda);
   printf(")");
-}
+}*/
 
 
 

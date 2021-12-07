@@ -44,6 +44,7 @@ digit        [0-9]
 
 
 ":"                            { return ':'; }
+";"                            { return ';'; }
 "\n"                           { return T_NEWLINE; }
 <<EOF>>                        { return EOF; }
 
