@@ -39,7 +39,14 @@ then a:=3
 while a<3
 do a:=a+3
 
-/* 
-
+/*
 (2:=3;
-3=5)*/
+3=5)
+*/
+
+printi(a:=3)
+
+scani()
+a:=scani()
+
+if scani()=3 then printi(42) 

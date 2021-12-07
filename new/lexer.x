@@ -22,8 +22,9 @@ digit        [0-9]
 [\n]*"else"[\n]*               { return ELSE; }
 [\n]*"then"[\n]*               { return THEN; }  
 "while"                        { return WHILE; }
-[\n]*"do"[\n]*                      { return DO; }
-
+[\n]*"do"[\n]*                 { return DO; }
+"scani()"                      { return SCANI; }
+"printi"                       { return PRINTI; }
 
 {digit}+                       { yylval.ival = atoi(yytext); return TOK_NUM; }
 ({alpha}+{digit}*)+            { yylval.sval = (char*)malloc(100*sizeof(char)); strcpy(yylval.sval, yytext); return TOK_CHAR; }

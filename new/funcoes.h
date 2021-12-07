@@ -33,6 +33,14 @@ Exp mk_tc(ties_cond tc, Exp left, Exp middle, Exp right){
   return e;
 }
 
+Exp mk_io(io_ io, Exp value){
+  Exp e = (Exp)malloc(sizeof(struct _exp));
+  e->tag = IO;
+  e->io_.io = io;
+  e->io_.value = value;
+  return e;
+}
+
 
 
 
@@ -87,10 +95,11 @@ void printaEnumOp(operacoes op){
       printf("EXP_SEQ ");
       break;
     default:
-      printf("<ainda n implementado>");
+      printf("NAO IMPLEMENTADO ");
       break;
   }
 }
+
 void printaEnumTc(ties_cond tc){
   switch (tc){
   case IF_:
@@ -101,6 +110,20 @@ void printaEnumTc(ties_cond tc){
     break;
   case WHILE_DO:
     printf("WHILE DO ");
+    break;
+  default:
+    printf("NAO IMPLEMENTADO ");
+    break;
+  }
+}
+
+void printaEnumIo(io_ io){
+  switch (io){
+  case PRINTI_:
+    printf("PRINTI");
+    break;
+  case SCANI_:
+    printf("SCANI");
     break;
   default:
     printf("NAO IMPLEMENTADO ");
@@ -133,6 +156,15 @@ void printaExp(Exp e){
       if (e->ties_cond.right != NULL){
         printf(" ");
         printaExp(e->ties_cond.right);
+      }
+      printf(")");
+      break;
+    case IO:
+      printf("(");
+      printaEnumIo(e->io_.io);
+      if (e->io_.value != NULL){
+        printf(" ");
+        printaExp(e->io_.value);
       }
       printf(")");
       break;

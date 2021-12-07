@@ -6,5 +6,5 @@
 (done) • Sequências de expressões: ( expr; expr; . . . expr }
 (done) • Ciclos while
 • Definição de funções com argumentos e retorno de valores
-• Funções para entrada e saída de inteiros: scani(), printi()
+(done) • Funções para entrada e saída de inteiros: scani(), printi()
 (done) • Comentarios
