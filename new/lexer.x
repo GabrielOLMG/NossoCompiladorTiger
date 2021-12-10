@@ -19,8 +19,8 @@ digit        [0-9]
 [ \t\r]+                       /* skip whitespace */
 
 "let"                          { return LET; }
-"in"                             { return IN; }
-"var"                          { return VAR; }
+[ \n\t\r]*"in"[ \n\t\r]*                            { return IN; }
+[ \n\t\r]*"var"                          { return VAR; }
 
 
 "if"                           { return IF; }
@@ -52,7 +52,7 @@ digit        [0-9]
 
 
 ":"                            { return ':'; }
-";"                            { return ';'; }
+";"[ \n\t\r]*                            { return ';'; }
 "\n"                           { return T_NEWLINE; }
 <<EOF>>                        { return EOF; }
 

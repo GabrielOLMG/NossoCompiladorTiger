@@ -32,13 +32,7 @@ struct _exp{
 };typedef struct _exp *Exp;
 
 
-/*struct _assert{
-  Exp esquerda;
-  Exp direita;
-};typedef struct _assert *Assert;*/
-
-/*struct _seq{
-  Exp esquerda;
-  Exp direita;
-};typedef struct _seq *Seq; */
-
+struct _programa{
+  Exp declaracao;
+  Exp exprecoes;
+}; typedef struct _programa *Programa;

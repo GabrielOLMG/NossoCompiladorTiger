@@ -50,16 +50,12 @@ Exp mk_decl(operacoes op, Exp e1, Exp e2){
   return e;
 }
 
-
-
-
-/*Assert mk_assert(Exp direita, Exp esquerda){
-  Assert a = (Assert)malloc(sizeof(struct _assert));
-  a->esquerda = esquerda;
-  a->direita = direita;
-  return a;
-}*/
-
+Programa mk_pg(Exp decl, Exp exp){
+  Programa p = (Programa)malloc(sizeof(struct _programa));
+  p->declaracao = decl;
+  p->exprecoes = exp;
+  return p;
+}
 
 
 void printaEnumOp(operacoes op){
@@ -185,10 +181,13 @@ void printaExp(Exp e){
       printaEnumOp(e->operacoes.op);
       printaExp(e->operacoes.left);
       if(e->operacoes.right != NULL){
-        printf(" ");
+        printf("); ");
         printaExp(e->operacoes.right);
-        }
-      printf(")");
+        
+       }else{
+        printf(");");
+      }
+      
       break;
     default:
       printf("erro \n");
@@ -196,14 +195,13 @@ void printaExp(Exp e){
   }
 }
 
-
-/*void printaAssert(Assert a){
-  printf("(ASSERT ");
-  printaExp(a->direita);
-  printf(" ");
-  printaExp(a->esquerda);
-  printf(")");
-}*/
+void printaPrg(Programa p){
+  printf("LET \n");
+  printaExp(p->declaracao);
+  printf("\n IN \n");
+  printaExp(p->exprecoes);
+  printf("\n");
+}
 
 
 

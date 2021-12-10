@@ -13,6 +13,7 @@ void yyerror (char const *);
     int ival;
     char *sval;
     struct _exp * exp_;
+    struct _programa * programa_;
     //struct _assert * assert_;
 }
 
@@ -20,24 +21,20 @@ void yyerror (char const *);
 %type <sval> TOK_CHAR
 %type <ival> TOK_NUM
 %type <exp_> term exp exp_seq assert op cond decl
-//%type <assert_> assert
-
+%type <programa_> new_line
 %start programa
 
 %%
 
-programa :
-    | new_line programa
+programa :new_line              {printaPrg($1);}
     ;
 
-new_line : exp      { printaExp($1); printf("\n");}
-    | LET T_NEWLINE decl      { printaExp($3); printf("\n");}
-    | T_NEWLINE
+new_line :LET decl IN exp_seq       {$$ = mk_pg($2,$4);}
     ;
 
 
 decl: VAR assert                { $$ = mk_decl(VAR_,$2,NULL); }
-    | VAR assert T_NEWLINE decl { $$ = mk_decl(VAR_,$2,$4); }
+    | VAR assert decl           { $$ = mk_decl(VAR_,$2,$3); }
     ;
 
 exp : assert                            { $$ = $1; }
