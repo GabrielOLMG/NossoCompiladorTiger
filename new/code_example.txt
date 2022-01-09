@@ -4,7 +4,4 @@ let
     var p := 4
     var h := 5
 in
-    while n <= 10 do
-        (s := s + n*n;
-        n := n + 1);
-    printi(n)
+    a<b
