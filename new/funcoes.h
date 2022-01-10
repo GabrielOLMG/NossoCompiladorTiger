@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "estruturas.h" 
+
 Exp mk_num(int v){
   Exp e = (Exp)malloc(sizeof(struct _exp));
   e->tag = NUM;
