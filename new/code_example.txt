@@ -1,7 +1,0 @@
-let
-    var s := 0
-    var n := 1
-    var p := 4
-    var h := 5
-in
-    a<b

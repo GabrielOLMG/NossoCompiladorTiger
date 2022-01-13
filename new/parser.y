@@ -1,6 +1,5 @@
 %{
-#include "estruturas.h"
-#include "funcoes.h"
+#include "codegenerator2.c"
 #include <stdio.h>
 #include <stdlib.h>
 int yylex (void);
@@ -26,7 +25,7 @@ void yyerror (char const *);
 
 %%
 
-programa :new_line              {printaPrg($1);}
+programa :new_line              {intermedio($1);/*printaPrg($1)*/}
     ;
 
 new_line :LET decl IN exp_seq       {$$ = mk_pg($2,$4);}

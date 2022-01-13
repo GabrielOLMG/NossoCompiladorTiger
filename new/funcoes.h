@@ -208,10 +208,62 @@ void printaPrg(Programa p){
   printf("\n");
 }
 
+void printa_instrucao(Instr instr_){
+  switch (instr_.codigo.opcode){
+    case MOVEI:
+      printf("MOVEI T%ld %ld\n",instr_.arg1,instr_.arg2);
+      break;
+    case OP_:
+      printf("OP ");
+      printaEnumOp(instr_.codigo.op_);
+      printf("T%ld T%ld T%ld \n",instr_.arg1,instr_.arg2,instr_.arg3);
+      break;
+    case COND:
+      printf("COND ");
+      printaEnumOp(instr_.codigo.op_);
+      if(instr_.codigo.opcode2 == LABEL){
+        printf("T%ld T%ld label%ld label%ld \n",instr_.arg2,instr_.arg3,instr_.arg4,instr_.arg5);
+      }else{
+         printf("T%ld T%ld T%ld \n",instr_.arg1,instr_.arg2,instr_.arg3);
+      }
+      break;
+    case LABEL:
+      printf("LABEL label%ld\n",instr_.arg1);
+      break;
+    case JUMP:
+      printf("JUMP label%ld\n",instr_.arg1);
+      break;
+    case MOVE:
+      printf("MOVE T%ld T%ld\n",instr_.arg1,instr_.arg2);
+      break;
+    case CALL:
+      if(instr_.codigo.i_o == SCANI_){
+        printf("CALL SCANI\n");
+      }else{
+        printf("CALL PRINTI T%ld\n",instr_.arg1);
+      }
+      break;
+    default:
+      printf("\nDEFAULT_PRINTA_INSTRUCOES\n");
+      break;
+  }
+}
+
+void itera_instrucao(node *PILHA){
+  if(PILHA->prox == NULL){
+    printa_instrucao(PILHA->instr);
+    return;
+  }else{
+    printa_instrucao(PILHA->instr);
+    itera_instrucao(PILHA->prox);
+  }
+
+}
+
+/*
+SCANI -> CALL scani 
+printi(algo) -> CALL printi tx
 
 
 
-
-
-
-
+*/

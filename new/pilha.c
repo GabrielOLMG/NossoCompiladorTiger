@@ -1,24 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-struct Node{
- char* id;
- int registro;
- struct Node *prox;
-};
-typedef struct Node node;
+#include "funcoes.h"
 
 int tam;
 
-void inicia(node *PILHA);
+node* inicia(node *PILHA);
 node* push(node *PILHA,node *novo);
 node *pop(node *PILHA);
 
-void inicia(node *PILHA){
+node* inicia(node *PILHA){
   PILHA = NULL;
   //PILHA->prox = NULL;
   tam=0;
+  return PILHA;
 }
 
 node *aloca(char*id_, int registro_){
@@ -31,6 +26,12 @@ node *aloca(char*id_, int registro_){
   return novo;
 }
 
+node *aloca_instrucao(Instr inst_){
+  node *novo=(node *) malloc(sizeof(node));
+  novo->instr = inst_;
+  novo->prox = NULL;
+  return novo;
+}
 
 node* push(node *PILHA,node *novo){
  if(PILHA==NULL){
@@ -51,7 +52,6 @@ node* push(node *PILHA,node *novo){
 node *pop(node *PILHA){
   if(PILHA == NULL) return NULL;
   if(PILHA->prox == NULL){
-    node* a = PILHA;
     tam--;
     PILHA = NULL;
     return PILHA;

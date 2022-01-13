@@ -24,10 +24,10 @@ digit        [0-9]
 
 
 "if"                           { return IF; }
-[\n]*"else"[\n]*               { return ELSE; }
-[\n]*"then"[\n]*               { return THEN; }  
+[ \n]*"else"[ \n]*               { return ELSE; }
+[ \n]*"then"[ \n]*               { return THEN; }  
 "while"                        { return WHILE; }
-[\n]*"do"[\n]*                 { return DO; }
+[ \n]*"do"[ \n]*                 { return DO; }
 "scani()"                      { return SCANI; }
 "printi"                       { return PRINTI; }
 
@@ -56,7 +56,7 @@ digit        [0-9]
 "\n"                           { return T_NEWLINE; }
 <<EOF>>                        { return EOF; }
 
-[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]    { printf("--------------------------------------------------------\n");}
+[ \n]*[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/][ *\n]*    { printf("--------------------------------------------------------\n");}
 .                              { printf("Mystery character %s\n", yytext); }
 
 

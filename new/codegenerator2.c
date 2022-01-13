@@ -1,25 +1,8 @@
-#include <stdint.h>
-#include "funcoes.h"
 #include "pilha.c"
-void transExp(Exp exp,int dest);
-
-typedef intptr_t Addr; // endereço (inteiro ou apontador)
-typedef enum { MOVE, MOVEI, OPI, OP_, LABEL, JUMP, COND } Opcode; // código da instrução
-typedef struct {
-    Opcode opcode;
-    Opcode opcode2;
-    Opcode opcode3;
-    operacoes op_;
-    ties_cond tc_;
-} Codigo;
-
-typedef struct {
-    Codigo codigo;
-    Addr arg1, arg2, arg3;
-} Instr; //opcode = MOVEI arg1 = dest arg2 = exp->val arg3 = NULL;
-
+int transExp(Exp exp,int dest);
 int temp_count = 0, label_count = 0; //var temporarias e labelcounts
 node *PILHA;
+node *PILHA_INSTRUCAO;
 
 int newTemp() {
     return temp_count++;
@@ -28,59 +11,115 @@ int newLabel () {
     return label_count ++;
 }
 
-/*CADA EMIT PRECISA RETORNAR A STRUCT INSTR, que sera completada se necessaria depois*/
 
 void emit1(Codigo opcode_,int t1){
-    switch(opcode_.opcode){
-        case LABEL:
-            break;
-            printf("LABEL T%d\n",t1);
-        case JUMP:
-            /*criar struct Instr*/
-            printf("JUMP T%d\n",t1); 
-            break;
-        default:
-            break;
-    }
+    Instr final;
+    final.arg2 = -1;
+    final.arg3 = -1;
+    final.arg4 = -1;
+    final.arg5 = -1;
+
+    Addr T1_ = t1;
+
+    final.codigo = opcode_;
+    final.arg1 = T1_;   
+
+    node* el = aloca_instrucao(final);
+    PILHA_INSTRUCAO = push(PILHA_INSTRUCAO,el);
 }
 
-void emit2(Codigo opcode_,int dest,int t1){
+Instr emit2(Codigo opcode_,int dest,int t1){
+    Instr final;
+    final.arg3 = -1;
+    final.arg4 = -1;
+    final.arg5 = -1;
+    Addr T1_ = t1;
+    Addr T2_ = dest;
     switch(opcode_.opcode){
         case MOVE:
-            break;
-            printf("MOVE T%d T%d\n",dest,t1);
         case MOVEI:
             /*criar struct Instr*/
-            printf("MOVEI T%d %d\n",dest,t1); 
+            final.codigo = opcode_;
+            final.arg1 = T2_; 
+            final.arg2 = T1_; 
             break;
         default:
             break;
     }
+    return final;
 }
 
-void emit3(Codigo opcode_,int dest,int t1, int t2){
+Instr emit3(Codigo opcode_,int dest,int t1, int t2){
+    Instr final;
+    final.arg4 = -1;
+    final.arg5 = -1;
+    Addr T1_ = t1;
+    Addr T2_ = t2;
+    Addr T3_ = dest;
     switch(opcode_.opcode){
+        case COND:
         case OP_:
-            printf("OP ");
-            printaEnumOp(opcode_.op_);
-            printf("T%d T%d T%d\n",dest,t1,t2);
+            final.codigo = opcode_;
+            final.arg1 = T3_;
+            final.arg2 = T1_; 
+            final.arg3 = T2_; 
             break;
         case OPI:
             /*criar struct Instr*/
             printf("OPI T%d T%d\n",dest,t1);
             break;
-        case COND:
-            printf("COND ");
-            printaEnumOp(opcode_.op_);
-            printf("T%d T%d ", t2,t1);
-
         default:
             break;
     }
+    return final;
 }
 
-
-//Opcode opcode_io;
+Instr emit5(Codigo opcode_, int t1, int t2, int l1, int l2, int l3){
+    Instr final;
+    Addr JUMP_;
+    Addr LABEL1_;
+    Addr LABEL2_;
+    Addr T1_;
+    Addr T2_;
+    switch (opcode_.opcode){
+        case JUMP:
+            JUMP_ = l1;
+            LABEL1_ = l2;
+            LABEL2_ = l3;
+            T1_ = t1;
+            T2_ = t2;
+            final.codigo = opcode_;
+            final.arg1 = JUMP_;
+            final.arg2 = LABEL1_; 
+            final.arg3 = LABEL2_;
+            final.arg4 = T1_;
+            final.arg5 = T2_;
+            break;
+        case LABEL:
+            LABEL1_ = l1;
+            LABEL2_ = l2;
+            T1_ = t1;
+            T2_ = t2;
+            final.codigo = opcode_;
+            final.arg1 = LABEL1_; 
+            final.arg2 = LABEL2_;
+            final.arg3 = T1_;
+            final.arg4 = T2_;
+        case COND:
+            LABEL1_ = l1;
+            LABEL2_ = l2;
+            T1_ = t1;
+            T2_ = t2;
+            final.codigo = opcode_;
+            final.arg2 = T1_;
+            final.arg3 = T2_;
+            final.arg4 = LABEL1_;
+            final.arg5 = LABEL2_;
+        default:
+            break;
+    }
+    return final;
+}
 
 Codigo opcode_operacoes(operacoes op){
   Codigo c;
@@ -90,11 +129,9 @@ Codigo opcode_operacoes(operacoes op){
       c.opcode = MOVE;
       return c;
     case EXP_SEQ:
-      printf("FAZER");
       c.opcode = MOVE;
       return c;
     case VAR_:
-      printf("FAZER");
       c.opcode = MOVE;
       return c;
     case MINUS:
@@ -106,35 +143,70 @@ Codigo opcode_operacoes(operacoes op){
       return c;
     default:
       c.opcode = COND;
-      c.opcode2 = LABEL;
       return c;
       break;
   }
 }
-Opcode opcode_ties_cond(ties_cond tc){
+
+Codigo opcode_ties_cond(ties_cond tc){
   Codigo c;
   c.tc_ = tc;
   switch(tc){
+      case WHILE_DO:
+        c.opcode = JUMP;
+        break;
+      default:
+        c.opcode = LABEL;
+        break;
   }
+  return c;
 }
+
 
 void transCond(Exp exp,int dest, int label1,int label2){
   int t1 = newTemp();
   int t2 = newTemp();
-  transExp(exp->operacoes.left, t1);
-  transExp(exp->operacoes.right, t2);
+  t1 = transExp(exp->operacoes.left, t1);
+  t2 = transExp(exp->operacoes.right, t2);
   Codigo c;
   c.op_ = exp->operacoes.op;
   c.opcode = COND;
   c.opcode2 = LABEL;
-  emit3(c,dest,t1,t2);//uma parte da isntrução sera feita aqui
-  printf("label%d label%d \n",label1,label2); // subsitutir essa parte por colocar a label na instrução
+  Instr final = emit5(c,t1,t2,label1,label2,-1);//uma parte da isntrução sera feita aqui
+  node* el = aloca_instrucao(final);
+  PILHA_INSTRUCAO = push(PILHA_INSTRUCAO,el);
+
+}
+
+Instr analisa_io(Exp exp){
+    Instr final;
+    int t1;
+    t1 = newTemp();
+
+    Codigo c;
+    c.i_o = exp->io_.io;
+    c.opcode = CALL;
+
+    switch (exp->io_.io){
+        case SCANI_:
+            emit1(c,t1);
+            break;
+        case PRINTI_:
+            t1 = transExp(exp->io_.value,t1);
+            emit1(c,t1);
+            break;
+        default:
+            break;
+    }
+
+    return final;
 }
 
 void analisa_tc(Exp exp){
-    Codigo c;
+    Instr final;
     int t1,t2,t3;
     int l1,l2,l3;
+    l3 = -1;
     switch(exp->ties_cond.tc){
       case WHILE_DO:
         l1 = newLabel();
@@ -142,16 +214,19 @@ void analisa_tc(Exp exp){
         l3 = newLabel();
         
         t1 = newTemp();
-        
-        printf("LABEL label%d\n",l1);
-        transCond(exp->ties_cond.left, t1,l2,l3);
         t2 = newTemp();
-        printf("LABEL label%d\n",l2);
-        transExp(exp->ties_cond.middle, t2);
-        printf("JUMP label%d\n",l1);
-        printf("LABEL label%d\n",l3);
+        Codigo c;
+        c.opcode = LABEL;
+        emit1(c,l1);//label inicio while
+        transCond(exp->ties_cond.left, t1,l2,l3);
+        emit1(c,l2);// label dentro while
         
-        return;
+        
+        t2 = transExp(exp->ties_cond.middle, t2);
+        emit1(opcode_ties_cond(exp->ties_cond.tc),l1); //jump
+        emit1(c,l3); //label final
+
+        break;
       default:
         t1 = newTemp();
         t2 = newTemp();
@@ -160,145 +235,111 @@ void analisa_tc(Exp exp){
         l2 = newLabel();
 
         transCond(exp->ties_cond.left, t1,l1,l2);
-        printf("LABEL label%d\n",l1);
-        transExp(exp->ties_cond.middle, t2);
-        printf("LABEL label%d\n",l2);
+        emit1(opcode_ties_cond(exp->ties_cond.tc),l1);
+
+        t2 = transExp(exp->ties_cond.middle, t2);
+
+        emit1(opcode_ties_cond(exp->ties_cond.tc),l2);
         if(exp->ties_cond.right != NULL){
           t3 = newTemp();
           l3 = newLabel();
-          transExp(exp->ties_cond.right, t3);
-          printf("LABEL label%d\n",l3);
+          t3 = transExp(exp->ties_cond.right, t3);
+          emit1(opcode_ties_cond(exp->ties_cond.tc),l3);
         }
+
     }
+    
 }
 
-void registra(Exp exp,int dest){
+Instr registra(Exp exp,int dest){ 
+    Instr final;
     Exp esq = exp->operacoes.left; //nome da variavel
-    node *el = aloca(esq->id,dest);
+    int t1 = newTemp();
+    node *el = aloca(esq->id,t1);
     PILHA=push(PILHA,el);
 
     Exp dir = exp->operacoes.right; // valor da variavel
-    int t1 = newTemp();
-    transExp(exp,t1);
-
-    
-
+    int t2 = newTemp();
+    t2 = transExp(dir,t2);
+    final = emit2(opcode_operacoes(exp->operacoes.op),t1,t2);
+    return final;
 }
 
-void transExp(Exp exp,int dest) {
+int transExp(Exp exp,int dest) {
+    Instr final;
     Codigo c;
-    int t1,t2,t3;
-    int l1,l2,l3;
+    int t1,t2;
     node *el;
     switch(exp->tag) {
         case OP:
             t1 = newTemp();
             t2 = newTemp();
-            transExp(exp->operacoes.left, t1); // lado esquerdo
-            transExp(exp->operacoes.right, t2); // lado direito
-            emit3(opcode_operacoes(exp->operacoes.op), dest, t1, t2); // instrução final
+            t1 = transExp(exp->operacoes.left, t1); // lado esquerdo
+            t2 = transExp(exp->operacoes.right, t2); // lado direito
+            if(exp->operacoes.op == EXP_SEQ) return dest;
+            if(opcode_operacoes(exp->operacoes.op).opcode != MOVE){
+                final = emit3(opcode_operacoes(exp->operacoes.op), dest, t1, t2); // instrução final
+            }else{
+                final = emit2(opcode_operacoes(exp->operacoes.op), t1, t2); // instrução final
+            }
             break;
         case NUM:
             c.opcode = MOVEI;
-            emit2(c,dest,exp->val);
-            return;
+            final = emit2(c,dest,exp->val);
             break;
         case TC:
             analisa_tc(exp);
+            return dest;
             break;
         case ID:
-            printf("ID ACHADO\n");
-            el = search(PILHA, "x");
-            printf("%d",el->registro);
-
-            /*pegar na tabela*/
+            el = search(PILHA, exp->id);
+            if(el == NULL){
+                printf("ERRO, VARIAVEL NÃO DECLARADA ANTERIORMENTE\n");
+                exit(0);
+            }
+            return el->registro;
             break;
         case DECL:
             /*colocar na tabela*/
-            registra(exp->operacoes.left,dest);
-            printf("\nDECL ACHADO\n");
-
+            final = registra(exp->operacoes.left,dest);
+            if (exp->operacoes.right != NULL){
+                t2 = transExp(exp->operacoes.right,dest);
+            }
+            break;
+        case IO:
+            final = analisa_io(exp);
+            return dest;
             break;
         default:
-            printf("CHAGANDO NO DEFAULT\n");
             break;
     }
+    el = aloca_instrucao(final);
+    PILHA_INSTRUCAO = push(PILHA_INSTRUCAO,el);
+    return dest;
 }
 
 
-void intermedio(){
+void intermedio(Programa pg){
     PILHA = (node *) malloc(sizeof(node));
-    PILHA = NULL;
+    PILHA_INSTRUCAO = (node *) malloc(sizeof(node));
+    PILHA = inicia(PILHA);
+    PILHA_INSTRUCAO = inicia(PILHA_INSTRUCAO);
+    Exp dec = pg->declaracao;
+    Exp exp = pg->exprecoes;
+    transExp(dec,newTemp());
+    transExp(exp,newTemp());
     /*
-    node *el = aloca("x",1,NULL);
-    node *e2 = aloca("y",2,NULL);
-    node *e3 = aloca("z",3,NULL);
-    PILHA=push(PILHA,el);
-    PILHA=push(PILHA,e2);
-    PILHA=push(PILHA,e3);
-    node*resultado = pop(PILHA);
-    // printf(PILHA)
-    node*resultado = search(PILHA, "x");
-    if (resultado!=NULL){printf("%d",resultado->registro);}
-    else printf("NULL");
-    
+    Exp id_ = mk_id("X");
+    //Exp num_ = mk_num(9);
+    Exp scani_ = mk_io(SCANI_,NULL);
+    Exp assert_ = mk_op(ASSERT,id_,scani_);
+    Exp decl_ = mk_decl(VAR_,assert_,NULL);
+    transExp(decl_,newTemp());
     */
-
-    
-
-    Exp numero1 =  mk_num(4);
-    Exp id_ = mk_id("x");
-    Exp assert_ = mk_op(ASSERT,id_,numero1);
-    Exp id_dlc = mk_decl(VAR_,assert_,NULL);
-    int dest = newTemp();
-    transExp(id_dlc,dest);
-
-    
-
-    //transExp(id_,dest);
+    itera_instrucao(PILHA_INSTRUCAO);
 }
-
+/*
 int main(){
-    /*
-    Exp numero2 =  mk_num(3);
-    Exp numero3 =  mk_num(5);
-    Exp soma = mk_op(PLUS,numero1,numero2);
-    Exp multiplicar = mk_op(TIME,numero3,soma);
-    Exp less_than = mk_op(LT,numero1,numero2);
-    Exp if_else = mk_tc(IF_,less_than,soma,numero3);
-    Exp while_ = mk_tc(WHILE_DO,less_than,if_else,NULL);
-    */
-    
-    intermedio();
-    /*
-    node *PILHA = (node *) malloc(sizeof(node));
-    inicia(PILHA);
-    node *el = aloca("x",2,NULL);
-    push(PILHA,el);
-
-    node *el_retorno = pop(PILHA);
-    printf("%d",el_retorno->registro);
-    */
+    intermedio(NULL);
     return 0;
-}
-
-
-/*
-HASKELL -- EXEMPLO AULA 11
-
-let expr = Op Mult (Num 3) (Op Plus (Num 4) (Num 5))
-> runState (transExpr expr Map.empty "x") (0,0)
-
-
-([MOVEI "t0" 3, MOVEI "t2" 4, MOVEI "t3" 5,
-OP Plus "t1" "t2" "t3", OP Mult "x" "t0" "t1"], (4,0))
-*/
-
-/*
-1arg -> LABEL loop
-2arg -> MOVEI "t0" 3
-3arg -> OP Plus "t1" "t2" "t3"
-*/
-
-
-
+}*/
